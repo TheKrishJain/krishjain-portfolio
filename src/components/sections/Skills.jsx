@@ -19,9 +19,9 @@ const skillsData = {
     { name: "Excel", icon: "/assets/hdr/excel.png" },
     { name: "Word", icon: "/assets/hdr/word.png" },
     { name: "PowerPoint", icon: "/assets/hdr/ppt.png" },
-,
     { name: "Gemini", icon: "/assets/hdr/gemini.webp" },
     { name: "Perplexity", icon: "/assets/hdr/perplexity.avif"},
+    { name: "Dialogflow", icon: "/assets/hdr/dialogflow.png"},
    
   ],
   business: [
