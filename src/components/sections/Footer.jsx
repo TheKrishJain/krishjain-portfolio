@@ -152,13 +152,13 @@ export default function Footer() {
 
       <div className="footer-content">
         <div className="footer-top">
-          <motion.h2 className="footer-title" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}>
-            Let's build something <br /> 
-            <span style={{ color: '#00d8ff' }}>extraordinary.</span>
-          </motion.h2>
+          <motion.h3 className="footer-title" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}>
+            Building at the intersection of  <br /> 
+            <span style={{ color: '#00d8ff' }}>Technology and Business</span>
+          </motion.h3>
           
           <p className="footer-desc" style={{ color: '#aaa', fontSize: '1.2rem', marginBottom: '2rem' }}>
-            Currently seeking new opportunities and creative collaborations.
+           Actively seeking full-time roles and growth opportunities
           </p>
 
           <div className="contact-section" style={{ marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '12px' }}>
