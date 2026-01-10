@@ -56,14 +56,14 @@ function CanvasLoader() {
         transition: 'opacity 1s ease-in-out', pointerEvents: 'none',
       }}
     >
-      <div style={{ width: '300px', height: '300px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '50px', zIndex:2 }}>
+      <div style={{ width: '300px', height: '300px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '10px', zIndex:2 }}>
 <DotLottieReact 
   src="/assets/models/load-animation.lottie" 
   loop 
   autoplay 
   onError={(err) => console.error("Lottie error:", err)}
 />  </div>
-      <p style={{ color: '#F1F1F1', fontSize: '18px', fontWeight: 800, margin: '170px', fontFamily: 'monospace', letterSpacing: '2px', position: 'relative', zIndex: 2 }}>
+      <p style={{ color: '#F1F1F1', fontSize: '18px', fontWeight: 800, margin: '70px', fontFamily: 'monospace', letterSpacing: '2px', position: 'relative', zIndex: 2 }}>
         {progress.toFixed(0)}%
       </p>
     </div>
