@@ -86,7 +86,7 @@ function DesktopModel() {
       }
     : { 
         scale: 0.92,              
-        pos: [5.3, -3.5, -5],     
+        pos: [5.5, -3.5, -5],     
         rot: [0, -90, -20]        
       };
 
