@@ -1,0 +1,10 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  /* 🔴 DELETE: height: 100%; */
+  /* 🟢 ADD: */
+  min-height: 110vh; 
+  overflow-x: hidden; /* Prevents side-scrollbars */
+}
+

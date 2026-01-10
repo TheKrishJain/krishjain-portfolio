@@ -1,0 +1,73 @@
+/* 🟢 1. GLOBAL RESET & SCROLL FIX */
+html {
+  /* This prevents the page from jumping when modals open */
+  scrollbar-gutter: stable;
+  scroll-behavior: smooth;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  
+  /* 🟢 CRITICAL: Ensure vertical scroll is enabled */
+  overflow-y: auto; 
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* 🟢 2. BACKGROUND STYLES */
+body {
+  background-image: url('/assets/hdr/herobg.png') !important;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Good for Desktop */
+  background-repeat: no-repeat;
+  background-color: #050816 !important;
+  
+  /* 🟢 FONT SETTINGS */
+  font-family: 'Inter', sans-serif; /* Ensure you have a font set */
+  color: white;
+}
+
+/* 🟢 3. MOBILE OPTIMIZATION FOR BACKGROUND */
+@media (max-width: 768px) {
+  body {
+    /* "Fixed" background causes jitter on iPhones. "Scroll" is smoother on mobile. */
+    background-attachment: scroll; 
+    background-size: cover; 
+  }
+}
+
+/* 🟢 4. SELECTION (Only disable for UI, let users copy text!) */
+button, img, a {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* 🟢 5. ROOT CONTAINER */
+#root {
+  width: 100%;
+  min-height: 100vh;
+  position: relative; 
+  overflow: hidden; /* Keeps child elements contained */
+}
+
+/* 🟢 6. CANVAS UTILS */
+#canvas-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh; /* Explicit height helps mobile browsers */
+  pointer-events: none; 
+  z-index: 0;
+}
+
+canvas {
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  pointer-events: auto; /* Re-enable pointer events for 3D interaction */
+}
