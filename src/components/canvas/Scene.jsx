@@ -25,7 +25,9 @@ function useIsMobile() {
   return isMobile;
 }
 // Preload the heavy model
-useGLTF.preload('/assets/models/scene.gltf');
+// Preload models for smoother experience
+useGLTF.preload('./assets/models/scene.gltf');
+useGLTF.preload('./assets/models/base2.glb'); // Preload the new GLB
 
 // 🟢 FIXED LOADER
 function CanvasLoader() {
@@ -138,26 +140,19 @@ function DesktopModel() {
     </group>
   );
 }
+
+// 🟢 UPDATED: Sculpture Component using base2.glb
 function Sculpture() {
-  const obj = useLoader(OBJLoader, './assets/models/base2.obj');
+  // Switched from OBJLoader to useGLTF
+  const { scene } = useGLTF('./assets/models/base2.glb');
   const scrollGroupRef = useRef();
   const [hovered, setHovered] = useState(false);
   const { viewport, camera } = useThree();
   const isMobile = useIsMobile(); 
 
   const config = isMobile 
-    ? { 
-        // 🟢 MOBILE CONFIG
-        scale: 1.2,              // Good size
-        pos: [0, -1.5, -3],    // Z: -1.5 (Brings it closer/forward)
-        targetY: -3.45            // 🎯 Y: -3.8 (Pushes it deeper down to hit the gap)
-      }
-    : { 
-        // 💻 DESKTOP CONFIG
-        scale: 1.5,              
-        pos: [3.5, -2, -1],
-        targetY: -1.3       
-      };
+    ? { scale: 1.2, pos: [0, -1.5, -3], targetY: -3.45 }
+    : { scale: 1.5, pos: [3.5, -2, -1], targetY: -1.3 };
 
   const goldMaterial = useMemo(() => {
     return new THREE.MeshStandardMaterial({
@@ -170,32 +165,29 @@ function Sculpture() {
   }, []);
 
   useLayoutEffect(() => {
-    obj.traverse((child) => {
+    // Traverse the GLB scene to apply the gold material
+    scene.traverse((child) => {
       if (child.isMesh) {
         child.material = goldMaterial;
         child.castShadow = true;
         child.receiveShadow = true;
       }
     });
-  }, [obj, goldMaterial]);
+  }, [scene, goldMaterial]);
 
   useFrame((state) => {
     if (scrollGroupRef.current) {
       const scrollY = window.scrollY;
       const windowHeight = window.innerHeight;
       const fullHeight = document.body.scrollHeight;
-      
       const distanceFromBottom = fullHeight - windowHeight - scrollY;
       const baseSpeed = viewport.height / window.innerHeight;
-      
       const distToObj = camera.position.z - config.pos[2]; 
       const pixelsToUnits = baseSpeed * (distToObj / camera.position.z);
-
       const targetY = config.targetY - (distanceFromBottom * pixelsToUnits);
       
       scrollGroupRef.current.position.y = Math.min(targetY, -1.5);
       scrollGroupRef.current.position.y += Math.sin(state.clock.elapsedTime) * 0.05;
-      
       scrollGroupRef.current.position.x = config.pos[0];
       scrollGroupRef.current.position.z = config.pos[2];
     }
@@ -206,8 +198,9 @@ function Sculpture() {
        <PresentationControls global={false} cursor={false} snap={false} speed={2.5} zoom={1} polar={[-Infinity, Infinity]} azimuth={[-Infinity, Infinity]}>
         <Center>
             <group onPointerOver={() => setHovered(true)} onPointerOut={() => setHovered(false)}>
+                {/* Invisible hit box for easier interaction */}
                 <mesh visible={true}><boxGeometry args={[4, 5, 4]} /><meshBasicMaterial transparent opacity={0} /></mesh>
-                <primitive object={obj} scale={config.scale} rotation={[0, -0.2, 0]} pointerEvents="none" />
+                <primitive object={scene} scale={config.scale} rotation={[0, -0.2, 0]} />
             </group>
         </Center>
       </PresentationControls>
@@ -216,7 +209,6 @@ function Sculpture() {
     </group>
   );
 }
-
 
 export default function Scene() {
   return (
