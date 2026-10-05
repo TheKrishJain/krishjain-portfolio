@@ -5,7 +5,7 @@ const workData = [
   {
     role: "Full Stack Web Developer Intern",
     company: "IEEE YOUNG PROFESSIONALS, BOMBAY SECTION",
-    duration: "Dec 2022 - Jan 2023",
+    duration: "Dec 2022 – Feb 2023",
     desc: "Led 8 developers as elected Team Lead to oversee project strategy and delivery. Managed Frontend Development: Spearheaded the design and layout, using Figma to create website interface."
   },
   {

@@ -3,10 +3,10 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 
 const educationData = [
   {
-    title: "Bachelor's of Science in Information Technology",
+    title: "Bachelor of Science in Information Technology",
     place: "VSIT, University of Mumbai",
     date: "2022 - 2025",
-    desc: "Graduated as one of the college topper (CGPA: 9.87) with strong foundations in software development, databases, and data analytics. Focused on building real-world projects alongside academics, including full-stack systems and AI-powered applications."
+    desc: "Graduated as one of the college toppers (CGPA: 9.87) with strong foundations in software development, databases, and data analytics. Focused on building real-world projects alongside academics, including full-stack systems and AI-powered applications."
   },
   {
     title: "HSC (Science)",
