@@ -10,14 +10,47 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 
 // 🟢 1. HELPER: Detect Mobile Screen
 // 🟢 1. HELPER: Detect Mobile AND Tablet
+
+function usePrefersReducedMotion() {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+    const listener = (event) => setPrefersReducedMotion(event.matches);
+    mediaQuery.addEventListener('change', listener);
+    return () => mediaQuery.removeEventListener('change', listener);
+  }, []);
+  return prefersReducedMotion;
+}
+
+// 🟢 HELPER: Scroll tracking for lazy loading Sculpture
+function useScrollToBottom() {
+  const [isNearBottom, setIsNearBottom] = useState(false);
+  useEffect(() => {
+    const checkScroll = () => {
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const fullHeight = document.body.scrollHeight;
+      // Load if within 2.5 screens of the bottom
+      if (fullHeight - windowHeight - scrollY < windowHeight * 2.5) {
+        setIsNearBottom(true);
+      }
+    };
+    checkScroll();
+    window.addEventListener('scroll', checkScroll);
+    return () => window.removeEventListener('scroll', checkScroll);
+  }, []);
+  return isNearBottom;
+}
+
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     // 🟢 CHANGED: Increased from 768 to 1024 to include iPad Air/Mini/Pro
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
-    
-    checkMobile(); 
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+
+    checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
@@ -27,7 +60,7 @@ function useIsMobile() {
 // Preload the heavy model
 // Preload models for smoother experience
 useGLTF.preload('./assets/models/scene.gltf');
-useGLTF.preload('./assets/models/base2.glb'); // Preload the new GLB
+// Removed preload for base2.glb to genuinely lazy load the heavy model
 
 // 🟢 FIXED LOADER
 function CanvasLoader() {
@@ -49,18 +82,18 @@ function CanvasLoader() {
     <div
       style={{
         position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
-        backgroundColor: '#000000', 
+        backgroundColor: '#000000',
         display: 'flex', flexDirection: 'column',
-        justifyContent: 'center', alignItems: 'center', 
-        zIndex: 10000, opacity: startFade ? 0 : 1, 
+        justifyContent: 'center', alignItems: 'center',
+        zIndex: 10000, opacity: startFade ? 0 : 1,
         transition: 'opacity 1s ease-in-out', pointerEvents: 'none',
       }}
     >
       <div style={{ width: '300px', height: '300px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '10px', zIndex:2 }}>
-<DotLottieReact 
-  src="/assets/models/load-animation.lottie" 
-  loop 
-  autoplay 
+<DotLottieReact
+  src="/assets/models/load-animation.lottie"
+  loop
+  autoplay
   onError={(err) => console.error("Lottie error:", err)}
 />  </div>
       <p style={{ color: '#F1F1F1', fontSize: '18px', fontWeight: 800, margin: '70px', fontFamily: 'monospace', letterSpacing: '2px', position: 'relative', zIndex: 2 }}>
@@ -78,16 +111,16 @@ function DesktopModel() {
   const isMobile = useIsMobile(); // 🟢 Detect Mobile
 
   // 🟢 RESPONSIVE CONFIGURATION
-  const config = isMobile 
-    ? { 
-        scale: 0.6,               
-        pos: [0, -2.5, -3],       
-        rot: [0, -90, -10]        
+  const config = isMobile
+    ? {
+        scale: 0.6,
+        pos: [0, -2.5, -3],
+        rot: [0, -90, -10]
       }
-    : { 
-        scale: 0.92,              
-        pos: [5.5, -3.5, -5],     
-        rot: [0, -90, -20]        
+    : {
+        scale: 0.92,
+        pos: [5.5, -3.5, -5],
+        rot: [0, -90, -20]
       };
 
   useEffect(() => {
@@ -110,29 +143,29 @@ function DesktopModel() {
     if (groupRef.current) {
       const scrollY = window.scrollY;
       const baseSpeed = viewport.height / window.innerHeight;
-      
-      const distToObj = camera.position.z - config.pos[2]; 
-      const distToCam = camera.position.z;              
-      const depthFactor = distToObj / distToCam;         
+
+      const distToObj = camera.position.z - config.pos[2];
+      const distToCam = camera.position.z;
+      const depthFactor = distToObj / distToCam;
       const pixelsToUnits = baseSpeed * depthFactor;
-      
+
       groupRef.current.position.y = config.pos[1] + (scrollY * pixelsToUnits);
     }
   });
 
   return (
-    <group 
-      ref={groupRef} 
+    <group
+      ref={groupRef}
       position={config.pos}
       rotation={[config.rot[0] * (Math.PI/180), config.rot[1] * (Math.PI/180), config.rot[2] * (Math.PI/180)]}
     >
-      <PresentationControls 
-        global={false} cursor={false} snap={true} speed={2} zoom={1} 
-        polar={[-0.2, 0.2]} azimuth={[-0.5, 0.5]} 
+      <PresentationControls
+        global={false} cursor={false} snap={true} speed={2} zoom={1}
+        polar={[-0.2, 0.2]} azimuth={[-0.5, 0.5]}
       >
-        <primitive 
-            object={scene} 
-            scale={config.scale} 
+        <primitive
+            object={scene}
+            scale={config.scale}
             onPointerOver={() => setHovered(true)}
             onPointerOut={() => setHovered(false)}
         />
@@ -148,9 +181,9 @@ function Sculpture() {
   const scrollGroupRef = useRef();
   const [hovered, setHovered] = useState(false);
   const { viewport, camera } = useThree();
-  const isMobile = useIsMobile(); 
+  const isMobile = useIsMobile();
 
-  const config = isMobile 
+  const config = isMobile
     ? { scale: 1.2, pos: [0, -1.5, -3], targetY: -3.45 }
     : { scale: 1.5, pos: [3.5, -2, -1], targetY: -1.3 };
 
@@ -160,7 +193,7 @@ function Sculpture() {
       metalness: 1.0,
       roughness: 0.15,
       envMapIntensity: 2.0,
-      side: THREE.DoubleSide, 
+      side: THREE.DoubleSide,
     });
   }, []);
 
@@ -182,10 +215,10 @@ function Sculpture() {
       const fullHeight = document.body.scrollHeight;
       const distanceFromBottom = fullHeight - windowHeight - scrollY;
       const baseSpeed = viewport.height / window.innerHeight;
-      const distToObj = camera.position.z - config.pos[2]; 
+      const distToObj = camera.position.z - config.pos[2];
       const pixelsToUnits = baseSpeed * (distToObj / camera.position.z);
       const targetY = config.targetY - (distanceFromBottom * pixelsToUnits);
-      
+
       scrollGroupRef.current.position.y = Math.min(targetY, -1.5);
       scrollGroupRef.current.position.y += Math.sin(state.clock.elapsedTime) * 0.05;
       scrollGroupRef.current.position.x = config.pos[0];
@@ -210,27 +243,52 @@ function Sculpture() {
   );
 }
 
+
 export default function Scene() {
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const showStatic = isMobile || prefersReducedMotion;
+  const isNearBottom = useScrollToBottom();
+
+  if (showStatic) {
+    return (
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }}>
+        <img
+          src="/assets/models/texture_diffuse.png"
+          style={{ position: 'absolute', top: '10%', right: '5%', width: '150%', maxWidth: '500px', opacity: 0.8 }}
+          alt="Desk Model"
+        />
+        {isNearBottom && (
+          <img
+            src="/assets/models/shaded.png"
+            style={{ position: 'absolute', bottom: '10%', left: '50%', transform: 'translateX(-50%)', width: '80%', maxWidth: '300px', opacity: 0.8 }}
+            alt="Sculpture"
+          />
+        )}
+      </div>
+    );
+  }
+
   return (
     <>
       <CanvasLoader />
       <div id="canvas-container" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'auto', zIndex: 0 }}>
-        <Canvas 
+        <Canvas
           camera={{ position: [0, 0, 5], fov: 60 }}
-          gl={{ alpha: true, preserveDrawingBuffer: true }} 
-          style={{ background: 'transparent' }} 
-          dpr={[1, 2]} 
+          gl={{ alpha: true, preserveDrawingBuffer: true }}
+          style={{ background: 'transparent' }}
+          dpr={[1, 2]}
           shadows
         >
-          <Environment preset="city" /> 
+          <Environment preset="city" />
           <hemisphereLight intensity={2.5} groundColor="black" color="#ffffff" />
           <spotLight position={[0, 50, 10]} angle={0.12} penumbra={1} intensity={4} color="white" castShadow />
           <pointLight position={[-10, -10, -10]} intensity={3} color="#915eff" />
-          
+
           <Suspense fallback={null}>
             <Stars radius={100} depth={50} count={3000} factor={4} saturation={0} fade speed={2} />
             <DesktopModel />
-            <Sculpture />
+            {isNearBottom && <Sculpture />}
             <Preload all />
           </Suspense>
         </Canvas>

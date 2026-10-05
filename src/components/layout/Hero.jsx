@@ -46,13 +46,13 @@ const HeroStyles = () => (
 
 export default function Hero() {
   return (
-    <section className="section-wrapper hero-padding" style={{ 
+    <section className="section-wrapper hero-padding" style={{
       position: 'relative',
-      width: '100%', 
-      height: '100vh', 
+      width: '100%',
+      height: '100vh',
       display: 'flex',
-      alignItems: 'flex-start', 
-      justifyContent: 'flex-start', 
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start',
       zIndex: 10,
       pointerEvents: 'none',
       boxSizing: 'border-box' // Prevents padding from breaking width
@@ -60,15 +60,15 @@ export default function Hero() {
       <HeroStyles />
 
       {/* TEXT CONTAINER */}
-      <div style={{ 
+      <div style={{
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'flex-start',
         gap: '20px',
-        width: 'fit-content', 
-        pointerEvents: 'auto' 
+        width: 'fit-content',
+        pointerEvents: 'auto'
       }}>
-        
+
         {/* DECORATION (Purple Dot & Line) */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '5px' }}>
           <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#00d8ff' }} />
@@ -77,7 +77,7 @@ export default function Hero() {
 
         {/* TEXT CONTENT */}
         <div>
-          <motion.h1 
+          <motion.h1
             className="hero-title"
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -86,20 +86,79 @@ export default function Hero() {
           >
             Hi, I'm <span style={{ color: '#00d8ff' }}>Krish Jain,</span>
           </motion.h1>
-          
-          <motion.p 
+
+          <motion.p
              className="hero-subtitle"
              initial={{ opacity: 0, x: -50 }}
              animate={{ opacity: 1, x: 0 }}
              transition={{ delay: 0.5, duration: 0.8 }}
-             style={{ 
-               color: '#cdf6fdff', 
-               fontWeight: '500', 
+             style={{
+               color: '#cdf6fdff',
+               fontWeight: '500',
              }}
           >
-            Technology-driven problem solver <br className="hidden-mobile" />
-            with strong foundations in <br className="hidden-mobile" />software and business thinking.
+            I build software and make sure it works &mdash; full-stack builder with a QA and business-process mindset.
           </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
+            style={{
+              display: 'flex',
+              gap: '16px',
+              marginTop: '30px',
+              flexWrap: 'wrap'
+            }}
+          >
+            <button
+              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+              style={{
+                backgroundColor: '#00d8ff',
+                color: '#050816',
+                fontWeight: '700',
+                padding: '12px 24px',
+                borderRadius: '8px',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                transition: 'transform 0.2s',
+                pointerEvents: 'auto',
+              }}
+              onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+              onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              Work with me
+            </button>
+            <a
+              href="/assets/Krish_Resume.pdf"
+              download="Krish_Resume.pdf"
+              style={{
+                backgroundColor: 'transparent',
+                color: '#00d8ff',
+                fontWeight: '700',
+                padding: '10px 24px',
+                borderRadius: '8px',
+                border: '2px solid #00d8ff',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                textDecoration: 'none',
+                display: 'inline-block',
+                transition: 'background-color 0.2s, color 0.2s, transform 0.2s',
+                pointerEvents: 'auto',
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(0, 216, 255, 0.1)';
+                e.currentTarget.style.transform = 'scale(1.05)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            >
+              Download CV
+            </a>
+          </motion.div>
         </div>
 
       </div>

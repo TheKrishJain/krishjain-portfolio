@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 // --- ResumeModal (Unchanged) ---
 function ResumeModal({ onClose }) {
-  const resumeUrl = '/assets/Krish_Resume.pdf'; 
+  const resumeUrl = '/assets/Krish_Resume.pdf';
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -21,7 +21,7 @@ function ResumeModal({ onClose }) {
         position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
         backgroundColor: 'rgba(0, 0, 0, 0.85)',
         backdropFilter: 'blur(10px)',
-        zIndex: 10001, 
+        zIndex: 10001,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         padding: '20px'
       }}
@@ -65,9 +65,9 @@ const NavbarStyles = () => (
     .nav-wrapper {
       width: 100%;
       display: flex;
-      justify-content: flex-end; 
+      justify-content: flex-end;
       padding: 10px 1.7% 0 0; /* 🟢 Reduced right padding from 4% to 2.5% to move it right */
-      position: absolute; 
+      position: absolute;
       top: 0;
       left: 0;
       z-index: 100;
@@ -96,21 +96,34 @@ const NavbarStyles = () => (
       font-weight:bold;
     }
     .nav-item:hover { color: #00d8ff; font-weight:bold; }
-    
+
     .resume-icon {
       font-size: 0.85rem;
       font-weight: bold;
     }
 
+    .hire-me-btn {
+      color: #00d8ff;
+      border: 1px solid #00d8ff;
+      border-radius: 6px;
+      padding: 4px 10px;
+      margin-left: 10px;
+      transition: all 0.3s ease;
+    }
+    .hire-me-btn:hover {
+      background: rgba(0, 216, 255, 0.1);
+      transform: scale(1.05);
+    }
+
     /* 📱 RESPONSIVE */
     @media (max-width: 1024px) {
-      .nav-wrapper { 
-        justify-content: center; 
-        padding-right: 0; 
+      .nav-wrapper {
+        justify-content: center;
+        padding-right: 0;
       }
-      .nav-pill { 
-        gap: 12px; 
-        padding: 6px 14px; 
+      .nav-pill {
+        gap: 12px;
+        padding: 6px 14px;
         border-radius: 6px; /* Slightly tighter radius for smaller screens */
       }
       .nav-item { font-size: 0.6rem; }
@@ -153,6 +166,9 @@ export default function Navbar() {
           <span className="nav-item" onClick={() => scrollToSection('contact')}>Contact</span>
           <span className="nav-item" onClick={() => setShowResume(true)}>
             Resume <span className="resume-icon">↓</span>
+          </span>
+          <span className="nav-item hire-me-btn" onClick={() => scrollToSection('contact')}>
+            Hire me
           </span>
         </nav>
       </header>
