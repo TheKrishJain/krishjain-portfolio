@@ -11,18 +11,15 @@ const CountUp = ({ to, label, startString = "", endString = "", duration = 2, in
     const end = parseFloat(to);
     if (start === end) return;
 
-    // We only animate if it's in view
     if (!inView) {
-      setCount(0);
       return;
     }
 
     let totalMilSecDur = parseInt(duration);
     let incrementTime = (totalMilSecDur / end) * 1000;
-    // to prevent infinite loops and too fast intervals
     if (incrementTime < 10) incrementTime = 10;
     let step = (end / (totalMilSecDur * 1000 / incrementTime));
-    if (step < 0.1) step = 0.1; // adjust for small numbers
+    if (step < 0.1) step = 0.1;
 
     let current = 0;
     let timer = setInterval(() => {
@@ -38,19 +35,98 @@ const CountUp = ({ to, label, startString = "", endString = "", duration = 2, in
     return () => clearInterval(timer);
   }, [to, duration, inView]);
 
-  // format based on if it's float or int
   const formattedCount = Number.isInteger(parseFloat(to))
     ? Math.floor(count).toLocaleString('en-US')
     : count.toFixed(2);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '15px' }}>
-      <div style={{ fontSize: '2.5rem', fontWeight: '800', color: '#00d8ff' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ fontSize: '2.5rem', fontWeight: '800', color: '#00FFFF' }}>
         {startString}{formattedCount}{endString}
       </div>
       <div style={{ fontSize: '0.9rem', color: '#cdf6fdff', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center', marginTop: '5px', fontWeight: '500' }}>
         {label}
       </div>
+    </div>
+  );
+};
+
+const FlipCard = ({ stat, inView }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <div
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        width: '200px',
+        height: '150px',
+        perspective: '1000px',
+        margin: '15px'
+      }}
+    >
+      <motion.div
+        animate={{ rotateY: isHovered ? 180 : 0 }}
+        transition={{ duration: 0.6, type: 'spring', stiffness: 260, damping: 20 }}
+        style={{
+          width: '100%',
+          height: '100%',
+          position: 'relative',
+          transformStyle: 'preserve-3d',
+        }}
+      >
+        {/* Front */}
+        <div
+          className="bg-white/5 backdrop-blur-md"
+          style={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            backfaceVisibility: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '16px',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            padding: '20px',
+            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)'
+          }}
+        >
+          <CountUp
+            to={stat.num}
+            label={stat.label}
+            startString={stat.start}
+            endString={stat.end}
+            inView={inView}
+          />
+        </div>
+
+        {/* Back */}
+        <div
+          className="bg-white/5 backdrop-blur-md"
+          style={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            backfaceVisibility: 'hidden',
+            transform: 'rotateY(180deg)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '16px',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            padding: '20px',
+            textAlign: 'center',
+            color: '#e2e8f0',
+            fontSize: '0.9rem',
+            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)'
+          }}
+        >
+          <p>{stat.backText}</p>
+        </div>
+      </motion.div>
     </div>
   );
 };
@@ -69,11 +145,11 @@ export default function ProofStrip() {
   }, [controls, inView]);
 
   const stats = [
-    { num: 9.87, label: "CGPA", start: "", end: "" },
-    { num: 100, label: "defects resolved", start: "", end: "+" },
-    { num: 80, label: "fewer post-launch issues", start: "", end: "%" },
-    { num: 50, label: "revenue built", start: "₹", end: "K" },
-    { num: 3248, label: "community members", start: "", end: "+" },
+    { num: 9.87, label: "CGPA", start: "", end: "", backText: "Top of the class academic excellence." },
+    { num: 100, label: "defects resolved", start: "", end: "+", backText: "Through rigorous QA and low-code OutSystems analysis." },
+    { num: 80, label: "fewer post-launch issues", start: "", end: "%", backText: "Achieved via comprehensive automated testing." },
+    { num: 50, label: "revenue built", start: "₹", end: "K", backText: "Generated via scaling my e-commerce brand operations." },
+    { num: 3248, label: "community members", start: "", end: "+", backText: "Grown an engaged tech community from scratch." },
   ];
 
   return (
@@ -92,26 +168,15 @@ export default function ProofStrip() {
         padding: '40px 20px',
         display: 'flex',
         flexWrap: 'wrap',
-        justifyContent: 'space-around',
-        alignItems: 'flex-start',
-        background: 'rgba(5, 8, 22, 0.6)',
-        backdropFilter: 'blur(10px)',
-        borderRadius: '16px',
-        border: '1px solid rgba(0, 216, 255, 0.1)',
+        justifyContent: 'center',
+        alignItems: 'center',
         position: 'relative',
         zIndex: 10,
-        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)'
+        gap: '20px'
       }}
     >
       {stats.map((stat, index) => (
-        <CountUp
-          key={index}
-          to={stat.num}
-          label={stat.label}
-          startString={stat.start}
-          endString={stat.end}
-          inView={inView}
-        />
+        <FlipCard key={index} stat={stat} inView={inView} />
       ))}
     </motion.section>
   );

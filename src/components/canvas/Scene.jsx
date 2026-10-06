@@ -275,12 +275,14 @@ export default function Scene() {
       <div id="canvas-container" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'auto', zIndex: 0 }}>
         <Canvas
           camera={{ position: [0, 0, 5], fov: 60 }}
-          gl={{ alpha: true, preserveDrawingBuffer: true }}
+          gl={{ alpha: true, preserveDrawingBuffer: true, antialias: true, toneMapping: THREE.ACESFilmicToneMapping, outputColorSpace: THREE.SRGBColorSpace }}
           style={{ background: 'transparent' }}
           dpr={[1, 2]}
           shadows
         >
           <Environment preset="city" />
+          <ambientLight intensity={1.5} />
+          <directionalLight position={[5, 10, 5]} intensity={2.5} castShadow />
           <hemisphereLight intensity={2.5} groundColor="black" color="#ffffff" />
           <spotLight position={[0, 50, 10]} angle={0.12} penumbra={1} intensity={4} color="white" castShadow />
           <pointLight position={[-10, -10, -10]} intensity={3} color="#915eff" />
