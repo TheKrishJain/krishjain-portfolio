@@ -3,6 +3,7 @@ import Hero from './components/layout/Hero';
 import ProofStrip from './components/sections/ProofStrip';
 import WorkExperience from './components/sections/WorkExperience';
 import Education from './components/sections/Education';
+import CertificateWeb from './components/sections/CertificateWeb';
 import Projects from "./components/sections/Projects";
 import Footer from "./components/sections/Footer"; 
 import Skills from './components/sections/Skills';
@@ -75,6 +76,8 @@ const Home = () => (
       <section id="education">
         <Education />
       </section>
+
+      <CertificateWeb />
 
       <section id="projects">
         <Projects />
